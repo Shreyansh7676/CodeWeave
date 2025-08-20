@@ -76,14 +76,14 @@ const Hero = () => {
               <span className="text-white">Code Together In Real Time</span>
               <div className='flex items-center justify-center space-x-2 mt-4 gap-2'>
                 <span className='text-white'>with</span>
-              <GradientText
-                colors={["#4320a0", "#3c1d90", "#6731f5", "#4320a0", "#3c1d90"]}
-                animationSpeed={3}
-                showBorder={false}
-                className="custom-class"
-              >
-                CodeWeave
-              </GradientText>
+                <GradientText
+                  colors={["#4320a0", "#3c1d90", "#6731f5", "#4320a0", "#3c1d90"]}
+                  animationSpeed={3}
+                  showBorder={false}
+                  className="custom-class"
+                >
+                  CodeWeave
+                </GradientText>
               </div>
             </h1>
             <p className="text-sm md:text-md text-gray-300 max-w-3xl mx-auto mb-12">
@@ -122,7 +122,7 @@ const Hero = () => {
                       <button className='relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50' onClick={generateRoomId}>
 
                         <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]' />
-                        <span className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 px-8 py-1 text-sm font-medium text-gray-50 backdrop-blur-3xl'>
+                        <span className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950/85 px-8 py-1 text-sm font-medium text-gray-50 backdrop-blur-3xl'>
                           Generate
                         </span>
                       </button>
@@ -215,8 +215,8 @@ const Hero = () => {
                   description: "Simple and intuitive interface. Just share a room code and start collaborating instantly."
                 }
               ].map((feature, index) => (
-                <div key={index} className="bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6 hover:bg-gray-800/50 transition-all group">
-                  <div className="text-purple-400 mb-4 group-hover:scale-110 transition-transform">
+                <div key={index} className="bg-black/15 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6 hover:bg-black/50 transition-all group hover:scale-105">
+                  <div className="text-violet-800 mb-4 transition-all">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
@@ -228,15 +228,18 @@ const Hero = () => {
 
           {/* CTA Section */}
           <div className="mt-20 md:mt-32 text-center">
-            <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-8 md:p-12">
+            <div className="bg-transparent  rounded-2xl p-8 md:p-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
                 Ready to Transform Your Coding Experience?
               </h2>
               <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
                 Join thousands of developers who are already collaborating more effectively with CodeCollab.
               </p>
-              <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-4 px-8 rounded-lg transition-all text-lg">
-                Get Started Free
+              <button className='relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50'>
+                <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]' />
+                <span className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 px-8 py-1 text-sm font-medium text-gray-50 backdrop-blur-3xl'>
+                  Get Started
+                </span>
               </button>
             </div>
           </div>
