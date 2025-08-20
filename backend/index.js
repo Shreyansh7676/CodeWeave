@@ -1,13 +1,13 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-
+import path from 'path';
 
 const app = express();
 
 const server = http.createServer(app)
 const io = new Server(server)
-
+const __dirname=path.resolve() 
 const userSocketMap = {};
 
 const getAllConnectedClients = (id) => {
@@ -59,6 +59,10 @@ io.on('connection', (socket) => {
   })
 });
 
+  app.use(express.static(path.join(__dirname, '../code/dist')));
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, "../code/","dist","index.html")); 
+  }); 
 
 
 const PORT = process.env.PORT || 5000;
