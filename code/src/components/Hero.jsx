@@ -7,7 +7,6 @@ import {
   Shield,
   Globe,
   ArrowRight,
-  Plus,
   Copy,
   Check
 } from 'lucide-react'

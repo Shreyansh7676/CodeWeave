@@ -1,9 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 import "codemirror/mode/javascript/javascript";
+// import "codemirror/mode/python/python";
 import "codemirror/theme/dracula.css"
+import "codemirror/theme/ayu-dark.css"
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/closetag";
 import "codemirror/lib/codemirror.css";
+
 import CodeMirror from "codemirror";
 
 const TextEditor = ({ socketRef, id, onCodeChange }) => {
@@ -51,7 +54,7 @@ const TextEditor = ({ socketRef, id, onCodeChange }) => {
         document.getElementById("realtimeEditor"),
         {
           mode: { name: "javascript", json: true },
-          theme: "dracula",
+          theme: "ayu-dark",
           autoCloseTags: true,
           autoCloseBrackets: true,
           lineNumbers: true,
