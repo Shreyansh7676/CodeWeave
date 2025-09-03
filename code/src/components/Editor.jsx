@@ -118,7 +118,7 @@ const CollaborativeTextEditor = () => {
                 className={`
           ${sidebarCollapsed ? 'w-0 md:w-16' : 'w-full md:w-80'} 
           transition-all duration-300 ease-in-out
-          bg-neutral-950 backdrop-blur-xl border-r border-gray-700/50
+          bg-neutral-950/50 backdrop-blur-xl border-r border-gray-700/50
           flex flex-col
           ${sidebarCollapsed ? '' : 'fixed md:relative inset-y-0 left-0 z-50'}
         `}
@@ -141,7 +141,7 @@ const CollaborativeTextEditor = () => {
                             </button> */}
                             <button
                                 onClick={toggleSidebar}
-                                className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                                className="p-2 hover:bg-violet-950/40 rounded-lg transition-colors"
                             >
                                 {sidebarCollapsed ? <Menu className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
                             </button>
@@ -162,7 +162,7 @@ const CollaborativeTextEditor = () => {
                                 className="flex items-center space-x-3 p-3 rounded-xl  hover:bg-violet-950/30 transition-all duration-200 group"
                             >
                                 <div className="relative">
-                                    <div className={`w-10 h-10 bg-violet-950/40 rounded-full flex items-center justify-center text-white font-medium text-sm shadow-lg`}>
+                                    <div className={`w-10 h-10 border font-bold border-violet-800 bg-violet-950/20 hover:bg-violet-950/40 rounded-full flex items-center justify-center text-violet-400 text-sm shadow-lg`}>
                                         {client.userName.charAt(0).toUpperCase()}
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@ const CollaborativeTextEditor = () => {
                     <div className="hidden md:flex flex-col items-center py-4 space-y-4">
                         <button
                             onClick={toggleSidebar}
-                            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                            className="p-2 hover:bg-violet-950/40 rounded-lg transition-colors"
                         >
                             <ChevronRight className="w-5 h-5" />
                         </button>
@@ -212,7 +212,7 @@ const CollaborativeTextEditor = () => {
                                     className="flex items-center space-x-3 p-3 rounded-xl hover:bg-violet-950/30 transition-all duration-200 group"
                                 >
                                     <div className="relative">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-medium text-sm shadow-lg`}>
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-violet-400 border font-bold border-violet-800 bg-violet-950/20 hover:bg-violet-950/40 text-sm shadow-lg`}>
                                             {client.userName.charAt(0).toUpperCase()}
                                         </div>
                                     </div>
