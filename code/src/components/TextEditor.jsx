@@ -10,43 +10,6 @@ import "codemirror/lib/codemirror.css";
 import CodeMirror from "codemirror";
 
 const TextEditor = ({ socketRef, id, onCodeChange }) => {
-  // Ref for the textarea DOM node
-  // const textareaRef = useRef(null);
-  // // Store the CodeMirror instance
-  // const editorRef = useRef(null);
-  // const editorInstance = useRef(null);
-
-  // useEffect(() => {
-  //     // Initialize CodeMirror only once when component mounts
-  //     if (textareaRef.current && !editorInstance.current) {
-  //         editorInstance.current = CodeMirror.fromTextArea(textareaRef.current, {
-  //             mode: { name: "javascript", json: true },
-  //             theme: "dracula",
-  //             autoCloseTags: true,
-  //             autoCloseBrackets: true,
-  //             lineNumbers: true,
-  //             indentUnit: 2,  
-  //             tabSize: 2,
-  //             indentWithTabs: false,
-  //             lineWrapping: true
-  //         });
-
-  //         // Set initial size
-  //         editorInstance.current.setSize("100%", "100%");
-
-  //         // Set some default content to show it's working
-  //         editorInstance.current.setValue("// Welcome to the collaborative editor!\n// Start typing your code here...\n\nfunction hello() {\n    console.log('Hello World!');\n}");
-  //     }
-
-  //     // Cleanup on unmount
-  //     return () => {
-  //         if (editorInstance.current) {
-  //             editorInstance.current.toTextArea();
-  //             editorInstance.current = null;
-  //         }
-  //     };
-  // }, []);
-
   const editorRef = useRef(null);
   useEffect(() => {
     const init = async () => {

@@ -7,24 +7,42 @@ import {
     LogOut,
     User,
     ChevronLeft,
+    Play,
+    Pause,
+    TimerReset,
     ChevronRight,
     Crown,
-    Circle
+    Circle,
+    Timer
 } from 'lucide-react';
 import TextEditor from './TextEditor';
 import { Link, useLocation, useParams, useNavigate } from 'react-router';
 import { initSocket } from '../Socket';
 import toast from 'react-hot-toast';
+import Dropdown from '../blocks/Dropdown';
 import GradientText from '../blocks/GradientText';
+
+
 const CollaborativeTextEditor = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [clients, setClients] = useState([]);
     const location = useLocation();
     const socketRef = useRef(null);
     const codeRef = useRef(null);
-    const [copied, setCopied] = useState(false)
+    const [copied, setCopied] = useState(false);
+    const [seconds, setSeconds] = useState(0);
+    const [timer, setTimer] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+
+    const languageOptions = [
+        { value: 'javascript', label: 'JavaScript' },
+        { value: 'python', label: 'Python' },
+        { value: 'java', label: 'Java' },
+        { value: 'cpp', label: 'C++' },
+        { value: 'go', label: 'Go' }
+    ];
 
     useEffect(() => {
         const init = async () => {
@@ -83,11 +101,37 @@ const CollaborativeTextEditor = () => {
         { id: 4, name: "Emily Davis", avatar: "ED", isOwner: false, isActive: true, color: "bg-pink-500" },
         { id: 5, name: "James Wilson", avatar: "JW", isOwner: false, isActive: false, color: "bg-orange-500" }
     ];
+    const handleTimer = (e) => {
+        e.preventDefault();
+        setTimer(!timer);
+    }
+    const handleReset=(e)=>{
+        e.preventDefault();
+        clearInterval(intervalRef.current);
+        setTimer(false);
+        setSeconds(0);
+    }
 
+    const formatTime = () => {
+        const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+        const second = String(seconds % 60).padStart(2, '0');
+        return `${hours}:${minutes}:${second}`;
+    }
     const roomId = id;
-
+    const intervalRef=useRef(null);
     // Ref for the textarea DOM node
-
+    useEffect(()=>{
+        if(timer){
+            intervalRef.current=setInterval(()=>{
+                setSeconds((prevSeconds)=>prevSeconds+1)
+            },1000);
+        }
+        else if(!timer && seconds!==0){
+            clearInterval(intervalRef.current);
+        }
+        return ()=>clearInterval(intervalRef.current);
+    },[timer,seconds])
 
     const toggleSidebar = () => {
         setSidebarCollapsed(!sidebarCollapsed);
@@ -133,12 +177,6 @@ const CollaborativeTextEditor = () => {
                                 </div>
                                 <h2 className="font-semibold text-lg">Participants</h2>
                             </div>
-                            {/* <button
-                                onClick={toggleSidebar}
-                                className="md:hidden p-1 hover:bg-gray-700 rounded-lg transition-colors"
-                            >
-                                <X className="w-5 h-5" />
-                            </button> */}
                             <button
                                 onClick={toggleSidebar}
                                 className="p-2 hover:bg-violet-950/40 rounded-lg transition-colors"
@@ -200,7 +238,7 @@ const CollaborativeTextEditor = () => {
                     <div className="hidden md:flex flex-col items-center py-4 space-y-4">
                         <button
                             onClick={toggleSidebar}
-                            className="p-2 hover:bg-violet-950/40 rounded-lg transition-colors"
+                            className="p-2 hover:bg-violet-950/40 hover:text-violet-400 rounded-lg transition-colors"
                         >
                             <ChevronRight className="w-5 h-5" />
                         </button>
@@ -217,13 +255,7 @@ const CollaborativeTextEditor = () => {
                                         </div>
                                     </div>
 
-                                    {/* <div className="flex-1 min-w-0">
-                                    <div className="flex items-center space-x-2">
-                                        <p className="text-sm font-medium truncate text-white">
-                                            {client.userName}
-                                        </p>
-                                    </div>
-                                </div> */}
+
                                 </div>
                             ))}
                         </div>
@@ -235,17 +267,16 @@ const CollaborativeTextEditor = () => {
             <div className="flex-1 flex flex-col min-w-0">
                 {/* Top Bar */}
                 <div className="bg-black backdrop-blur-xl border-b border-gray-700/50 p-4 flex items-center justify-between">
-                    <div className="flex text-left space-x-4">
-                        {/* z */}
+                    {/* Left Section */}
+                    <div className="flex items-center space-x-4">
                         <button
                             onClick={toggleSidebar}
                             className="p-2 hover:bg-gray-700 rounded-lg flex md:hidden transition-colors"
                         >
                             <ChevronRight className="w-5 h-5" />
                         </button>
-                        <div className="text-xl md:text-2xl  flex flex-col justify-start items-start text-left">
+                        <div className="text-xl md:text-2xl flex flex-col justify-start items-start text-left">
                             <div>
-
                                 <GradientText
                                     colors={["#4320a0", "#3c1d90", "#6731f5", "#4320a0", "#3c1d90"]}
                                     animationSpeed={3}
@@ -259,10 +290,41 @@ const CollaborativeTextEditor = () => {
                         </div>
                     </div>
 
-                    {/* Mobile user count */}
-                    <div className="flex items-center space-x-2 sm:hidden">
-                        <Users className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-400">{clients.length}</span>
+                    {/* Center Section - Hidden on mobile, can be used for dropdown later */}
+                    <div className="hidden md:flex items-center">
+                        {/*  <Dropdown
+                                options={languageOptions}
+                                value={selectedLanguage}
+                                onChange={(option) => setSelectedLanguage(option.value)}
+                                placeholder="Choose a programming language"
+                                className="z-50 w-64"
+                            /> */}
+                    </div>
+
+                    {/* Right Section */}
+                    <div className="flex items-center space-x-4">
+                        {/* Timer - Hidden on mobile */}
+                        <div className='hidden md:flex py-2 px-1 gap-2 bg-violet-950/20 items-center border border-violet-900 rounded-md transition-all ease-in'>
+                            <div className='flex border-r-2 border-violet-900 items-center justify-center'>
+                                <button onClick={handleTimer}>
+                                    {timer ? <Pause className='m-1 h-4 w-4 text-violet-600 hover:text-violet-400' /> : <Play className='m-1 h-4 w-4 text-violet-600' />}
+                                </button>
+                            </div>
+                            <div>
+                                {formatTime()}
+                            </div>
+                            <div className='flex border-l-2 border-violet-900 items-center justify-center'>
+                                <button onClick={handleReset}>
+                                    <TimerReset className='m-1 h-4 w-4 text-violet-600 hover:text-violet-400' />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Mobile user count */}
+                        <div className="flex items-center space-x-2 md:hidden">
+                            <Users className="w-4 h-4 text-gray-400" />
+                            <span className="text-sm text-gray-400">{clients.length}</span>
+                        </div>
                     </div>
 
                 </div>
