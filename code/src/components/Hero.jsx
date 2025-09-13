@@ -67,11 +67,6 @@ const Hero = () => {
         <div className="container mx-auto px-4 md:py-6">
           <div className="text-center mb-12">
             <h1 className="text-2xl md:text-3xl lg:text-6xl font-bold mb-6">
-              {/* <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                Code Together
-              </span> */}
-
-
               <span className="text-white">Code Together In Real Time</span>
               <div className='flex items-center justify-center space-x-2 mt-4 gap-2'>
                 <span className='text-white'>with</span>
@@ -93,7 +88,7 @@ const Hero = () => {
 
           {/* Main Action Panel */}
           <div className="max-w-2xl mx-auto">
-            <SpotlightCard className="custom-spotlight-card bg-black/15" spotlightColor="rgba(67, 32, 160, 0.2)">
+            <SpotlightCard className="custom-spotlight-card bg-black/20" spotlightColor="rgba(67, 32, 160, 0.2)">
               <div >
                 <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-white">
                   Start Collaborating Now
