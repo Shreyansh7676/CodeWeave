@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import axios from 'axios';
 import "codemirror/mode/javascript/javascript";
-// import "codemirror/mode/python/python";
 import "codemirror/theme/dracula.css"
 import "codemirror/theme/ayu-dark.css"
 import "codemirror/addon/edit/closebrackets";
@@ -9,7 +9,8 @@ import "codemirror/lib/codemirror.css";
 
 import CodeMirror from "codemirror";
 
-const TextEditor = ({ socketRef, id, onCodeChange }) => {
+const TextEditor = ({ socketRef, id, initialCode, onCodeChange }) => {
+  const [code, setCode] = useState(typeof initialCode === 'string' ? initialCode : "");
   const editorRef = useRef(null);
   useEffect(() => {
     const init = async () => {
@@ -39,6 +40,9 @@ const TextEditor = ({ socketRef, id, onCodeChange }) => {
           });
         }
       });
+      if (initialCode && typeof initialCode === 'string') {
+        editor.setValue(initialCode);
+      }
 
     };
 
@@ -48,7 +52,7 @@ const TextEditor = ({ socketRef, id, onCodeChange }) => {
   useEffect(() => {
     if (socketRef.current) {
       socketRef.current.on('code-change', ({ code }) => {
-        if (code !== null) {
+        if (code !== null && code !== undefined && typeof code === 'string' && code !== editorRef.current.getValue()) {
           editorRef.current.setValue(code);
         }
       });
@@ -59,7 +63,13 @@ const TextEditor = ({ socketRef, id, onCodeChange }) => {
 
   }, [socketRef.current])
 
-
+  useEffect(() => {
+    if (editorRef.current && initialCode !== undefined && initialCode !== null && typeof initialCode === 'string') {
+      if (editorRef.current.getValue() !== initialCode) {
+        editorRef.current.setValue(initialCode);
+      }
+    }
+  }, [initialCode]);
   return (
     <div style={{ height: "600px", width: "100%" }}>
       {/* 
@@ -75,3 +85,4 @@ const TextEditor = ({ socketRef, id, onCodeChange }) => {
 }
 
 export default TextEditor
+

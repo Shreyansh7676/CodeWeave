@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Shreyansh7676/CodeWeave/issues"
   },
-  "homepage": "https://github.com/Shreyansh7676/CodeWeave#readme"
+  "homepage": "https://github.com/Shreyansh7676/CodeWeave#readme",
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
 }

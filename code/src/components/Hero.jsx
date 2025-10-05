@@ -51,7 +51,7 @@ const Hero = () => {
     setTimeout(() => {
       setIsLoading(false)
       // Navigate to the editor with the room key
-      navigate(`/editor/${roomKey}?name=${encodeURIComponent(userName)}`, {
+      navigate(`/${roomKey}?name=${encodeURIComponent(userName)}`, {
         state: {
           userName
         }

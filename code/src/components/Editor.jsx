@@ -20,6 +20,7 @@ import { Link, useLocation, useParams, useNavigate } from 'react-router';
 import { initSocket } from '../Socket';
 import toast from 'react-hot-toast';
 import Dropdown from '../blocks/Dropdown';
+import axios from 'axios';
 import GradientText from '../blocks/GradientText';
 
 
@@ -34,15 +35,6 @@ const CollaborativeTextEditor = () => {
     const [timer, setTimer] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
-    const [selectedLanguage, setSelectedLanguage] = useState('');
-
-    const languageOptions = [
-        { value: 'javascript', label: 'JavaScript' },
-        { value: 'python', label: 'Python' },
-        { value: 'java', label: 'Java' },
-        { value: 'cpp', label: 'C++' },
-        { value: 'go', label: 'Go' }
-    ];
 
     useEffect(() => {
         const init = async () => {
@@ -58,6 +50,17 @@ const CollaborativeTextEditor = () => {
                 toast.error('Socket connection failed.');
                 navigate('/');
             }
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/api/room/${id}`);
+                const savedCode = res.data.code;
+                if (savedCode) {
+                    codeRef.current = savedCode; // update ref
+                }
+            } catch (error) {
+                console.error("Failed to fetch saved code", error);
+                toast.error("Failed to load saved code");
+            }
+
             socketRef.current.emit('join', {
                 id,
                 userName: location.state?.userName
@@ -93,25 +96,31 @@ const CollaborativeTextEditor = () => {
         };
     }, [])
 
-    // Mock data - you can replace with your own state management
-    const users = [
-        { id: 1, name: "Alex Chen", avatar: "AC", isOwner: true, isActive: true, color: "bg-purple-500" },
-        { id: 2, name: "Sarah Johnson", avatar: "SJ", isOwner: false, isActive: true, color: "bg-blue-500" },
-        { id: 3, name: "Mike Rodriguez", avatar: "MR", isOwner: false, isActive: false, color: "bg-green-500" },
-        { id: 4, name: "Emily Davis", avatar: "ED", isOwner: false, isActive: true, color: "bg-pink-500" },
-        { id: 5, name: "James Wilson", avatar: "JW", isOwner: false, isActive: false, color: "bg-orange-500" }
-    ];
     const handleTimer = (e) => {
         e.preventDefault();
         setTimer(!timer);
     }
-    const handleReset=(e)=>{
+    const handleReset = (e) => {
         e.preventDefault();
         clearInterval(intervalRef.current);
         setTimer(false);
         setSeconds(0);
     }
-
+    const handleSave = async () => {
+        try {
+            console.log('Saving code:', { roomId: id, codeLength: codeRef.current?.length });
+            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/api/room/${id}/save`, { 
+                code: codeRef.current || '' 
+            });
+            console.log('Save response:', response.data);
+            toast.success("Code saved successfully");
+        }
+        catch (err) {
+            console.error('Error saving code:', err);
+            console.error('Error details:', err.response?.data);
+            toast.error("Failed to save code: " + (err.response?.data?.error || err.message));
+        }
+    }
     const formatTime = () => {
         const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
         const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
@@ -119,19 +128,19 @@ const CollaborativeTextEditor = () => {
         return `${hours}:${minutes}:${second}`;
     }
     const roomId = id;
-    const intervalRef=useRef(null);
+    const intervalRef = useRef(null);
     // Ref for the textarea DOM node
-    useEffect(()=>{
-        if(timer){
-            intervalRef.current=setInterval(()=>{
-                setSeconds((prevSeconds)=>prevSeconds+1)
-            },1000);
+    useEffect(() => {
+        if (timer) {
+            intervalRef.current = setInterval(() => {
+                setSeconds((prevSeconds) => prevSeconds + 1)
+            }, 1000);
         }
-        else if(!timer && seconds!==0){
+        else if (!timer && seconds !== 0) {
             clearInterval(intervalRef.current);
         }
-        return ()=>clearInterval(intervalRef.current);
-    },[timer,seconds])
+        return () => clearInterval(intervalRef.current);
+    }, [timer, seconds])
 
     const toggleSidebar = () => {
         setSidebarCollapsed(!sidebarCollapsed);
@@ -152,9 +161,6 @@ const CollaborativeTextEditor = () => {
         }
     }
 
-    // const handleChange = (event) => {
-    //     onSelect(event.target.value);
-    // };
     return (
         <div className="h-screen bg-black text-white flex overflow-hidden">
             {/* Sidebar */}
@@ -224,12 +230,12 @@ const CollaborativeTextEditor = () => {
                             <Copy className="w-4 h-4 group-hover:scale-110 transition-transform" />
                             <span className="font-medium">Copy Room ID</span>
                         </button>
-                        <div className="w-full flex items-center justify-center space-x-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 px-4 py-3 rounded-xl transition-all duration-200 border border-red-500/20 group">
+                        <button className="w-full flex items-center justify-center space-x-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 px-4 py-3 rounded-xl transition-all duration-200 border border-red-500/20 group">
 
                             <Link to={"/"}>
                                 <span className="font-medium">Leave Room</span>
                             </Link>
-                        </div>
+                        </button>
                     </div>
                 )}
 
@@ -290,24 +296,21 @@ const CollaborativeTextEditor = () => {
                         </div>
                     </div>
 
-                    {/* Center Section - Hidden on mobile, can be used for dropdown later */}
-                    <div className="hidden md:flex items-center">
-                        {/*  <Dropdown
-                                options={languageOptions}
-                                value={selectedLanguage}
-                                onChange={(option) => setSelectedLanguage(option.value)}
-                                placeholder="Choose a programming language"
-                                className="z-50 w-64"
-                            /> */}
-                    </div>
+
 
                     {/* Right Section */}
                     <div className="flex items-center space-x-4">
-                        {/* Timer - Hidden on mobile */}
+                        {/* Save Button */}
+                        <button 
+                            onClick={handleSave}
+                            className="px-4 py-2 border border-violet-800 bg-violet-950/20 hover:bg-violet-950/40 text-gray-300 hover:text-white rounded-md transition-colors duration-200 text-sm font-medium"
+                        >
+                            Save Code
+                        </button>
                         <div className='hidden md:flex py-2 px-1 gap-2 bg-violet-950/20 items-center border border-violet-900 rounded-md transition-all ease-in'>
                             <div className='flex border-r-2 border-violet-900 items-center justify-center'>
                                 <button onClick={handleTimer}>
-                                    {timer ? <Pause className='m-1 h-4 w-4 text-violet-600 hover:text-violet-400' /> : <Play className='m-1 h-4 w-4 text-violet-600' />}
+                                    {timer ? <Pause className='m-1 h-4 w-4 text-violet-600 hover:text-violet-400' /> : <Play className='m-1 h-4 w-4 text-violet-600 hover:text-violet-400' />}
                                 </button>
                             </div>
                             <div>
@@ -331,7 +334,8 @@ const CollaborativeTextEditor = () => {
 
                 {/* Text Editor */}
                 <div className='p-3 max-h-[400px]'>
-                    <TextEditor socketRef={socketRef} id={id} onCodeChange={(code) => (codeRef.current = code)} />
+                    <TextEditor socketRef={socketRef} id={id} initialCode={codeRef.current}
+                        onCodeChange={(code) => (codeRef.current = code)} />
                 </div>
 
             </div>
