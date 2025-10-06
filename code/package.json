@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prebuild": "npm install --force",
+    "build": "vite build",
+    "postbuild": "echo Build completed"
   },
   "dependencies": {
     "axios": "^1.12.2",
