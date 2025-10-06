@@ -4,7 +4,6 @@ import { Server } from 'socket.io';
 import path from 'path';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { type } from 'os';
 // import {connectDB} from './config.js'
 
 const app = express();
@@ -36,9 +35,12 @@ const io = new Server(server, {
 const __dirname=path.resolve() 
 const userSocketMap = {};
 
-mongoose.connect("mongodb://127.0.0.1:27017/codeweave")
-.then(()=>console.log("DB connected"))
-.catch((err)=>console.log(err))
+// Use MongoDB Atlas for production or environment variable for local development
+const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/codeweave";
+
+mongoose.connect("mongodb+srv://codeweave-by-zenett:Zenettcodeweave@cluster0.rictnet.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+.then(() => console.log("✅ Connected to MongoDB Atlas"))
+  .catch(err => console.error("❌ MongoDB connection error:", err));
 
 
 const codeSchema=new mongoose.Schema({
@@ -129,7 +131,12 @@ app.post('/api/room/:roomId/save',async(req,res)=>{
   const {roomId} = req.params;
   const { code } = req.body;
   
-  console.log('Save request received:', { roomId, codeLength: code?.length });
+  console.log('Save request received:', { 
+    roomId, 
+    codeLength: code?.length,
+    mongoURI: process.env.MONGODB_URI ? 'Using Atlas' : 'Using Local',
+    headers: req.headers.origin
+  });
   
   if(code === null || code === undefined){
     return res.status(400).json({error:"Code is required"});
