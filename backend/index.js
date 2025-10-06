@@ -38,9 +38,9 @@ const userSocketMap = {};
 // Use MongoDB Atlas for production or environment variable for local development
 const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/codeweave";
 
-mongoose.connect("mongodb+srv://codeweave-by-zenett:Zenettcodeweave@cluster0.rictnet.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-.then(() => console.log("✅ Connected to MongoDB Atlas"))
-  .catch(err => console.error("❌ MongoDB connection error:", err));
+mongoose.connect(mongoURI)
+.then(() => console.log("✅ DB connected to:", mongoURI.includes('mongodb.net') ? 'MongoDB Atlas' : 'Local MongoDB'))
+.catch(err => console.error("❌ MongoDB connection error:", err));
 
 
 const codeSchema=new mongoose.Schema({
