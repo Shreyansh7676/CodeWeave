@@ -8,6 +8,9 @@
     "dev": "nodemon index.js",
     "start": "set NODE_ENV=production&& node index.js"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+  },
   "author": "Shreyansh",
   "license": "ISC",
   "dependencies": {
