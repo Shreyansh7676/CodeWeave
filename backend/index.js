@@ -165,13 +165,13 @@ app.post('/api/room/:roomId/save',async(req,res)=>{
 })
 
 //uptime route
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    message: 'Your API is running',
-    timestamp: new Date().toISOString()
-  });
-});
+// app.get('/api/health', (req, res) => {
+//   res.json({
+//     status: 'OK',
+//     message: 'Your API is running',
+//     timestamp: new Date().toISOString()
+//   });
+// });
 
 // Static file serving - This should come AFTER API routes
 app.use(express.static(path.join(__dirname, '../code/dist')));
