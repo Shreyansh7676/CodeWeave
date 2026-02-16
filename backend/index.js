@@ -4,6 +4,8 @@ import { Server } from 'socket.io';
 import path from 'path';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 // import {connectDB} from './config.js'
 
 const app = express();
@@ -173,7 +175,91 @@ app.post('/api/room/:roomId/save',async(req,res)=>{
 //   });
 // });
 
-// Static file serving - This should come AFTER API routes
+
+// ─── AI Config (change these env vars to swap models) ───────────────
+
+const AI_MODEL_URL = process.env.AI_MODEL_URL;
+const AI_API_KEY   = process.env.GROQ_API_KEY;
+
+// Detect provider from the URL
+function detectProvider(url = '') {
+  if (url.includes('generativelanguage.googleapis.com')) return 'gemini';
+  if (url.includes('openai.com') || url.includes('openrouter.ai')) return 'openai';
+  return 'openai'; // default to OpenAI-compatible format
+}
+
+// Build the request headers + body for each provider
+function buildRequest(provider, apiKey, prompt) {
+  if (provider === 'gemini') {
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: {
+        contents: [{ parts: [{ text: prompt }] }],
+      },
+    };
+  }
+
+  // OpenAI / OpenAI-compatible (OpenRouter, Together, etc.)
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: {
+      model: process.env.AI_MODEL_NAME || 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: 'You are a code explainer. Explain the provided code clearly and concisely. Break down what each part does, mention the purpose, key functions, and any important patterns used. Keep it beginner-friendly but technically accurate. Use plain text formatting.' },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0,
+      max_tokens: 1024,
+    },
+  };
+}
+
+// Extract the text from whichever response shape we get
+function extractText(provider, data) {
+  if (provider === 'gemini') {
+    return data.candidates?.[0]?.content?.parts?.[0]?.text;
+  }
+  // OpenAI-compatible
+  return data.choices?.[0]?.message?.content;
+}
+
+app.post('/api/ai', async (req, res) => {
+  const { prompt } = req.body;
+  if (!prompt || typeof prompt !== 'string') {
+    return res.status(400).json({ error: 'A "prompt" string is required' });
+  }
+  if (!AI_MODEL_URL || !AI_API_KEY) {
+    return res.status(500).json({ error: 'AI_MODEL_URL or AI_API_KEY not configured on server' });
+  }
+
+  const provider = detectProvider(AI_MODEL_URL);
+  const { headers, body } = buildRequest(provider, AI_API_KEY, prompt);
+
+  try {
+    const response = await fetch(AI_MODEL_URL, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    console.log('AI proxy status:', response.status);
+    console.log('AI proxy response:', JSON.stringify(data, null, 2));
+
+    const text = extractText(provider, data) || 'No explanation generated.';
+    res.json({ text });
+  } catch (err) {
+    console.error('AI proxy error:', err);
+    res.status(500).json({ error: 'AI request failed' });
+  }
+});
+
 app.use(express.static(path.join(__dirname, '../code/dist')));
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, "../code/","dist","index.html")); 

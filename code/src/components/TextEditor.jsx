@@ -8,8 +8,10 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/lib/codemirror.css";
 
 import CodeMirror from "codemirror";
+import useStore from '../store/store.jsx';
 
 const TextEditor = ({ socketRef, id, initialCode, onCodeChange }) => {
+  const { updateCode } = useStore();
   const [code, setCode] = useState(typeof initialCode === 'string' ? initialCode : "");
   const editorRef = useRef(null);
   useEffect(() => {
@@ -33,6 +35,7 @@ const TextEditor = ({ socketRef, id, initialCode, onCodeChange }) => {
         const { origin } = changes;
         const code = instance.getValue();
         onCodeChange(code);
+        updateCode(code);
         if (origin !== 'setValue') {
           socketRef.current.emit('code-change', {
             id,

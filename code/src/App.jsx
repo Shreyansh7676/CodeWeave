@@ -3,14 +3,15 @@ import Hero from './components/Hero.jsx'
 import Editor from './components/Editor.jsx'
 import {Routes, Route} from 'react-router'
 import toast from 'react-hot-toast'
+import { StoreProvider } from './store/store.jsx'
 const App = () => {
   return (
-    <div>
+    <StoreProvider>
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/:id" element={<Editor />} />
       </Routes>
-    </div>
+    </StoreProvider>
   )
 }
 
