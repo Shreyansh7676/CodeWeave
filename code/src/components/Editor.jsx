@@ -61,7 +61,7 @@ const CollaborativeTextEditor = () => {
                 navigate('/');
             }
             try {
-                const res = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/api/room/${id}`);
+                const res = await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL1}/api/room/${id}`);
                 const savedCode = res.data.code;
                 if (savedCode) {
                     codeRef.current = savedCode; // update ref
@@ -119,7 +119,7 @@ const CollaborativeTextEditor = () => {
     const handleSave = async () => {
         try {
             console.log('Saving code:', { roomId: id, codeLength: codeRef.current?.length });
-            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/api/room/${id}/save`, {
+            const response = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL1}/api/room/${id}/save`, {
                 code: codeRef.current || ''
             });
             console.log('Save response:', response.data);
@@ -151,7 +151,7 @@ const CollaborativeTextEditor = () => {
         const prompt = `You are a code explainer. Explain the provided code clearly and concisely. Break down what each part does, mention the purpose, key functions, and any important patterns used. Keep it beginner-friendly but technically accurate. Use plain text formatting.\n\nCode:\n${code}`;
 
         try {
-            const res = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/api/ai`, { prompt });
+            const res = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL1}/api/ai`, { prompt });
             const data = res.data;
             if (data.text) {
                 setAiExplanation(data.text);
