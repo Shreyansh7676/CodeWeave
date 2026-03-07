@@ -66,15 +66,15 @@ const Hero = () => {
       <div className='relative px-6 py-24'>
         <div className="container mx-auto px-4 md:py-6">
           <div className="text-center mb-12">
-            <h1 className="text-2xl md:text-3xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-xl md:text-3xl lg:text-5xl font-bold mb-6 flex flex-col items-center justify-center">
               <span className="text-white">Code Together In Real Time</span>
-              <div className='flex items-center justify-center space-x-2 mt-4 gap-2'>
-                <span className='text-white'>with</span>
+              <div className='flex flex-col md:flex-row items-center justify-center mt-2 md:mt-4 gap-2'>
+                <span className='text-gray-400 text-sm font-thin md:font-bold md:text-white md:text-5xl'>with</span>
                 <GradientText
                   colors={["#4320a0", "#3c1d90", "#6731f5", "#4320a0", "#3c1d90"]}
                   animationSpeed={3}
                   showBorder={false}
-                  className="custom-class"
+                  className="custom-class md:text-6xl text-5xl font-extrabold"
                 >
                   CodeWeave
                 </GradientText>
@@ -90,7 +90,7 @@ const Hero = () => {
           <div className="max-w-2xl mx-auto">
             <SpotlightCard className="custom-spotlight-card bg-black/20" spotlightColor="rgba(67, 32, 160, 0.2)">
               <div >
-                <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-white">
+                <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-white">
                   Start Collaborating Now
                 </h2>
 
@@ -98,22 +98,15 @@ const Hero = () => {
                   {/* Room Key Input with Generate Button */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300">Room Key</label>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-2 items-center">
                       <input
                         type="text"
                         value={roomKey}
                         onChange={(e) => setRoomKey(e.target.value)}
-                        placeholder="Enter room key (e.g., ABC12345)"
-                        className="flex-1 bg-transparent border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-950 focus:border-transparent transition-all"
+                        placeholder="Enter room key"
+                        className="w-full md:flex-1 bg-transparent border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-950 focus:border-transparent transition-all"
                       />
-                      {/* <button
-                      onClick={generateRoomId}
-                      className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 py-3 rounded-lg font-medium transition-all flex items-center space-x-2 whitespace-nowrap"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span className="hidden sm:inline">Generate</span>
-                    </button> */}
-                      <button className='relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50' onClick={generateRoomId}>
+                      <button className='w-full md:w-auto relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50' onClick={generateRoomId}>
 
                         <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]' />
                         <span className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950/85 px-8 py-1 text-sm font-medium text-gray-50 backdrop-blur-3xl'>
