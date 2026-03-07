@@ -167,13 +167,13 @@ app.post('/api/room/:roomId/save',async(req,res)=>{
 })
 
 //uptime route
-// app.get('/api/health', (req, res) => {
-//   res.json({
-//     status: 'OK',
-//     message: 'Your API is running',
-//     timestamp: new Date().toISOString()
-//   });
-// });
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    message: 'Your API is running',
+    timestamp: new Date().toISOString()
+  });
+});
 
 
 // ─── AI Config (change these env vars to swap models) ───────────────
