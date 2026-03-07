@@ -28,7 +28,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:5173", 
-      "https://codeweave-7yxf.onrender.com"
+      "https://codeweave-7yxf.onrender.com",
+      "https://codeweave-pw4q.onrender.com/"
     ],
     methods: ["GET", "POST"],
     credentials: true
